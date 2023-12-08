@@ -7,11 +7,12 @@ function generateId() {
   return +new Date();
 }
 
-function generateTodoObject(id, task, timestamp, isCompleted) {
+function generateTodoObject(id, title, writer, year, isCompleted) {
   return {
     id,
-    task,
-    timestamp,
+    title,
+    writer,
+    year,
     isCompleted
   };
 }
@@ -64,21 +65,23 @@ function loadDataFromStorage() {
 }
 
 function makeTodo(todoObject) {
-
-  const {id, task, timestamp, isCompleted} = todoObject;
+  const { id, title, writer, year, isCompleted } = todoObject;
 
   const textTitle = document.createElement('h2');
-  textTitle.innerText = task;
+  textTitle.innerText = `Judul: ${title}`;
 
-  const textTimestamp = document.createElement('p');
-  textTimestamp.innerText = timestamp;
+  const textWriter = document.createElement('p');
+  textWriter.innerText = `Penulis: ${writer}`;
+
+  const textYear = document.createElement('p');
+  textYear.innerText = `Tahun Terbit: ${year}`;
 
   const textContainer = document.createElement('div');
   textContainer.classList.add('inner');
-  textContainer.append(textTitle, textTimestamp);
+  textContainer.append(textTitle, textWriter, textYear);
 
   const container = document.createElement('div');
-  container.classList.add('item', 'shadow')
+  container.classList.add('item', 'shadow');
   container.append(textContainer);
   container.setAttribute('id', `todo-${id}`);
 
@@ -112,16 +115,22 @@ function makeTodo(todoObject) {
 }
 
 function addTodo() {
-  const textTodo = document.getElementById('title').value;
-  const timestamp = document.getElementById('date').value;
+  const textTitle = document.getElementById('title').value;
+  const textWriter = document.getElementById('writer').value;
+  const year = document.getElementById('year').value;
 
   const generatedID = generateId();
-  const todoObject = generateTodoObject(generatedID, textTodo, timestamp, false);
+  const todoObject = generateTodoObject(generatedID, textTitle, textWriter, year, false);
   todos.push(todoObject);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
-  showToast(`Tugas "${textTodo}" berhasil ditambah.`);
+  showToast(`Buku "${textTitle}" berhasil ditambah.`);
+
+  // kode untuk mengosongkan nilai pada input form
+  document.getElementById('title').value = '';
+  document.getElementById('writer').value = '';
+  document.getElementById('year').value = '';
 }
 
 function addTaskToCompleted(todoId) {
@@ -132,7 +141,7 @@ function addTaskToCompleted(todoId) {
   todoTarget.isCompleted = true;
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
-  showToast(`Tugas "${todoTarget.task}" telah ditandai sebagai selesai.`);
+  showToast(`Buku "${todoTarget.title}" telah ditandai sebagai selesai.`);
 }
 
 function removeTaskFromCompleted(todoId) {
@@ -140,10 +149,10 @@ function removeTaskFromCompleted(todoId) {
 
   if (todoTarget === -1) return;
 
-  const removedTask = todos[todoTarget].task; // Mengambil task yang akan dihapus
+  const removeBook = todos[todoTarget].title; // Mengambil judul buku yang akan dihapus
   todos.splice(todoTarget, 1);
   saveData();
-  showToast(`Tugas "${removedTask}" telah dihapus dari daftar selesai.`);
+  showToast(`Buku "${removeBook}" telah dihapus dari daftar selesai.`);
 
   // Memicu ulang rendering untuk memperbarui tampilan
   document.dispatchEvent(new Event(RENDER_EVENT));
@@ -157,7 +166,7 @@ function undoTaskFromCompleted(todoId) {
   todoTarget.isCompleted = false;
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
-  showToast(`Tugas "${todoTarget.task}" telah dikembalikan ke daftar yang belum selesai.`);
+  showToast(`Buku "${todoTarget.title}" telah dikembalikan ke daftar yang belum selesai.`);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -183,13 +192,6 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 3000); // 3000 milidetik atau 3 detik
 }
-
-// document.addEventListener(SAVED_EVENT, () => {
-//   const data = localStorage.getItem(STORAGE_KEY);
-//   if (data) {
-//     showToast(`Data telah diperbarui: ${data}`);
-//   }
-// });
 
 document.addEventListener(RENDER_EVENT, function () {
   const uncompletedTODOList = document.getElementById('todos');

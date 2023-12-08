@@ -5,26 +5,30 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rak Buku</title>
+  <title>bookshelf</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
   <header>
-    <h1>Rak Buku</h1>
+    <h1>bookshelf Apps</h1>
   </header>
 
   <main class="wrapper">
     <div class="container bg-white shadow" id="add-todo">
-      <h2 class="container-header text-center">Tambah Buku yang akan dibaca</h2>
+      <h2 class="judul">Masukan Buku Baru</h2>
       <form class="form" action="#" id="form">
         <div class="form-group form-title">
-          <label for="title">Masukkan buku yang akan dibaca</label>
+          <label for="title">Masukkan Judul</label>
           <input type="text" id="title" name="title" required>
         </div>
         <div class="form-group form-title">
-          <label for="date">Masukkan tanggal harus selesai</label>
-          <input type="date" id="date" name="date" required>
+          <label for="title">Masukkan Penulis</label>
+          <input type="text" id="writer" name="writer" required>
+        </div>
+        <div class="form-group form-title">
+          <label for="date">Masukkan Tahun</label>
+          <input type="number" id="year" name="year" required>
         </div>
         <input type="submit" value="Tambah" name="Submit" class="btn-submit">
       </form>
@@ -39,6 +43,7 @@
     <div class="container">
       <h2 class="container-header">Yang sudah diBaca</h2>
       <div class="list-item" id="completed-todos">
+        
       </div>
     </div>
 
